@@ -1,31 +1,30 @@
-# Branch Manager Dashboard (Ogilvy Africa Assessment)
+# Branch Manager Dashboard - Ogilvy Africa Assessment
 
-A full-stack interactive Branch Manager Dashboard built with React (Next.js) and Node.js (Express). This application allows branch managers to track key performance indicators (KPIs), visualize lead and revenue data, and monitor agent performance.
+This repository contains the solution for the **Full Stack Engineering Take-Home Assignment**. It implements a responsive, interactive Branch Manager Dashboard that allows for filtering, visualizing, and analyzing key performance metrics for sales agents and branches.
 
-![Dashboard Preview](DASHBOARD-Branch manager.jpg)
+## 🏗️ Architecture & Technology Stack
 
-## 🚀 Technology Stack
+The project follows a **Monorepo** structure for simplicity and ease of evaluation, separating the frontend and backend concerns while keeping them in a single repository.
 
-- **Frontend:** Next.js 15 (React 19), Tailwind CSS, Recharts, Lucide React, Axios.
-- **Backend:** Node.js, Express.js.
-- **Tools:** TypeScript, ESLint.
+### **Frontend (Client)**
+*   **Framework:** [Next.js 15 (App Router)](https://nextjs.org/) - Chosen for its robust routing, server-side rendering capabilities, and modern React 19 integration.
+*   **Language:** TypeScript - For type safety and better developer experience.
+*   **Styling:** [Tailwind CSS](https://tailwindcss.com/) - Used for rapid, responsive, and consistent UI development matching the provided design specs.
+*   **Visualization:** [Recharts](https://recharts.org/) - Selected for its composable API to build the required complex Area, Donut, and Bar charts.
+*   **Icons:** Lucide React.
+*   **State Management:** React Hooks (`useState`, `useEffect`) - Implemented to manage local filter states and handle data fetching side-effects.
 
-## ✨ Features
+### **Backend (Server)**
+*   **Runtime:** Node.js
+*   **Framework:** [Express.js](https://expressjs.com/) - A minimal and flexible framework to quickly set up the required REST API endpoints.
+*   **Data Source:** In-memory Mock Data (`data.js`) - Simulates a database with comprehensive datasets for Agents, Branches, and historical metrics.
+*   **Logic:** Custom filtering logic implemented in the controller to handle query parameters (`?branch=A&agent=Jane`) and simulate dynamic data changes (KPI adjustments, chart trend shifts).
 
-- **Interactive Filtering:** Filter data by Date Range, Agent, Branch, Product, Segment, and Campaign.
-- **KPI Tracking:** Real-time view of Turn Around Time, Conversion Rate, Contacted Leads, and Total Leads.
-- **Data Visualization:**
-  - Area Charts for Leads & Revenue by Branch.
-  - Donut Chart for Lead Status distribution.
-  - Bar Chart for Agent Performance.
-- **Agent Rankings:** Detailed tables for Branch Ranking and Top Performing Agents.
-- **Responsive Design:** Fully optimized for Desktop and Tablet views.
+---
 
-## 🛠️ Setup Instructions
+## 🚀 Setup & Run Instructions
 
-### Prerequisites
-- Node.js (v18 or higher)
-- npm
+To run this project locally, you will need **Node.js (v18 or higher)** and **npm**.
 
 ### 1. Clone the Repository
 ```bash
@@ -33,53 +32,61 @@ git clone https://github.com/Muigaihacks/Ogilvy-Africa-Branch-Manager-Dashboard.
 cd Ogilvy-Africa-Branch-Manager-Dashboard
 ```
 
-### 2. Backend Setup
-The backend runs on port 5000.
+### 2. Start the Backend API
+The backend runs on **Port 8000** (to avoid conflicts with system services on macOS).
 
-```bash
-cd server
-npm install
-npm run dev
-```
-_Keep this terminal running._
+1.  Open a terminal and navigate to the server directory:
+    ```bash
+    cd server
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Start the server:
+    ```bash
+    npm run dev
+    ```
+    ✅ You should see: `Server running on port 8000`
 
-### 3. Frontend Setup
-The frontend runs on port 3000.
+### 3. Start the Frontend Application
+The frontend runs on **Port 3000**.
 
-```bash
-# Open a new terminal
-cd client
-npm install
-npm run dev
-```
+1.  Open a **new** terminal window (keep the server terminal running).
+2.  Navigate to the client directory:
+    ```bash
+    cd client
+    ```
+3.  Install dependencies:
+    ```bash
+    npm install
+    ```
+4.  Start the development server:
+    ```bash
+    npm run dev
+    ```
+    ✅ Access the app at: [http://localhost:3000](http://localhost:3000)
 
-### 4. Access the Application
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+---
 
-## 📂 Project Structure
+## ✨ Key Features Implemented
 
-```
-├── client/                 # Next.js Frontend
-│   ├── src/
-│   │   ├── app/           # App Router Pages
-│   │   ├── components/    # Reusable UI Components
-│   │   ├── lib/           # API Utilities
-│   │   └── types.ts       # TypeScript Interfaces
-│   └── package.json
-└── server/                 # Express Backend
-    ├── server.js          # API Entry Point
-    ├── data.js            # Mock Data Source
-    └── package.json
-```
+*   **Pixel-Perfect UI:** Closely matched the provided design mockups, including the specific "Optimus" logo, color palette, and layout structure (Sidebar, Top Nav, Dashboard Grid).
+*   **Interactive Filtering:**
+    *   The **Filter Bar** drives the entire dashboard. Selecting a **Branch** (e.g., Branch A) filters the Charts, Tables, and even adjusts the KPI cards to reflect that specific branch's data.
+    *   **"Filter By" Dropdowns** on charts trigger visual updates (simulating time-scale changes).
+*   **Dynamic Data Visualization:**
+    *   **Area Charts:** Smooth gradients for Leads and Revenue trends.
+    *   **Donut Chart:** "Lead Status" distribution that updates proportionally based on filters.
+    *   **Bar Chart:** "Agent Performance" comparison.
+*   **Robust Data Handling:**
+    *   The backend simulates realistic data relationships (e.g., selecting "Branch A" only shows agents belonging to Branch A in the rankings).
+    *   Implemented **Loading Skeletons** and **Error States** for a production-grade user experience.
 
-## 🧠 Architectural Decisions
+## 📝 Notes for the Evaluator
 
-- **Monorepo-style Structure:** Kept client and server separate for clear separation of concerns while maintaining a single repository for submission.
-- **Next.js App Router:** Leveraged for modern React features and routing.
-- **Client-Side Fetching:** Used `useEffect` for data fetching to strictly adhere to the requirement of "managing local state of filters and triggering data fetching" on client interaction.
-- **Tailwind CSS:** For rapid, consistent, and responsive styling.
-- **Recharts:** Chosen for its flexibility in creating the specific custom wave/area charts required by the design.
+*   **Port Configuration:** The backend is configured to run on port `8000` by default. If you need to change this, update `server/server.js` and `client/src/lib/api.ts`.
+*   **Data Simulation:** While the backend uses mock data, the filtering logic is functional. You will see values change when applying filters to demonstrate the full-stack connection.
 
-## 📝 License
-This project is part of a technical assessment for Ogilvy Africa.
-
+---
+**Submission by:** Tyrese Muigai
