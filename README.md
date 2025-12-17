@@ -26,30 +26,24 @@ The project follows a **Monorepo** structure for simplicity and ease of evaluati
 
 To run this project locally, you will need **Node.js (v18 or higher)** and **npm**.
 
+## ✅ Vercel Deployment (what you should submit)
+
+This repo is deployable on **Vercel** as a single Next.js app from the `client/` folder.
+
+- In Vercel, set **Root Directory** to `client`
+- Framework preset: **Next.js**
+- Build command: `npm run build`
+- Output: `.next` (auto-detected)
+
+The dashboard API is provided by a **Next.js Route Handler** at `GET /api/dashboard` (same-origin), so you **do not need** to deploy the Express server for Vercel.
+
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/Muigaihacks/Ogilvy-Africa-Branch-Manager-Dashboard.git
 cd Ogilvy-Africa-Branch-Manager-Dashboard
 ```
 
-### 2. Start the Backend API
-The backend runs on **Port 8000** (to avoid conflicts with system services on macOS).
-
-1.  Open a terminal and navigate to the server directory:
-    ```bash
-    cd server
-    ```
-2.  Install dependencies:
-    ```bash
-    npm install
-    ```
-3.  Start the server:
-    ```bash
-    npm run dev
-    ```
-    ✅ You should see: `Server running on port 8000`
-
-### 3. Start the Frontend Application
+### 2. Start the Frontend Application
 The frontend runs on **Port 3000**.
 
 1.  Open a **new** terminal window (keep the server terminal running).
@@ -85,8 +79,8 @@ The frontend runs on **Port 3000**.
 
 ## 📝 Notes for the Evaluator
 
-*   **Port Configuration:** The backend is configured to run on port `8000` by default. If you need to change this, update `server/server.js` and `client/src/lib/api.ts`.
-*   **Data Simulation:** While the backend uses mock data, the filtering logic is functional. You will see values change when applying filters to demonstrate the full-stack connection.
+*   **API:** `GET /api/dashboard` is implemented inside the Next.js app (Route Handler). This keeps the submission one-click deployable on Vercel.
+*   **Data Simulation:** The filtering logic is functional. You will see values change when applying filters to demonstrate dynamic data.
 
 ---
 **Submission by:** Tyrese Muigai

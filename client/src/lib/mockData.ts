@@ -1,0 +1,98 @@
+export const mockData = {
+  kpi: {
+    turnAroundTime: { value: 6.27, unit: "days", change: -0.2, history: "Was 0(min) 31 days ago" },
+    conversionRate: { value: 1.06, unit: "%", change: 0.5, history: "Was 0% 31 days ago" },
+    totalContactedLeads: { value: 17, change: 1, history: "No change from 31 days ago" },
+    totalLeads: { value: 471, change: 1, history: "No change from 31 days ago" },
+  },
+  charts: {
+    leadsByBranch: [
+      { name: "1st", leads: 40, conversion: 20, branch: "Branch A" },
+      { name: "2nd", leads: 50, conversion: 25, branch: "Branch A" },
+      { name: "3rd", leads: 45, conversion: 22, branch: "Branch A" },
+      { name: "4th", leads: 55, conversion: 28, branch: "Branch A" },
+      { name: "5th", leads: 60, conversion: 30, branch: "Branch A" },
+      { name: "6th", leads: 65, conversion: 35, branch: "Branch A" },
+
+      { name: "1st", leads: 30, conversion: 15, branch: "Branch B" },
+      { name: "2nd", leads: 35, conversion: 18, branch: "Branch B" },
+      { name: "3rd", leads: 40, conversion: 20, branch: "Branch B" },
+      { name: "4th", leads: 38, conversion: 19, branch: "Branch B" },
+      { name: "5th", leads: 42, conversion: 21, branch: "Branch B" },
+      { name: "6th", leads: 45, conversion: 23, branch: "Branch B" },
+
+      { name: "1st", leads: 25, conversion: 12, branch: "Branch C" },
+      { name: "2nd", leads: 28, conversion: 14, branch: "Branch C" },
+      { name: "3rd", leads: 30, conversion: 15, branch: "Branch C" },
+      { name: "4th", leads: 35, conversion: 18, branch: "Branch C" },
+      { name: "5th", leads: 32, conversion: 16, branch: "Branch C" },
+      { name: "6th", leads: 38, conversion: 19, branch: "Branch C" },
+    ],
+    revenueByBranch: [
+      { name: "1st", target: 2000, achieved: 1200, branch: "Branch A" },
+      { name: "2nd", target: 2200, achieved: 1400, branch: "Branch A" },
+      { name: "3rd", target: 2400, achieved: 1600, branch: "Branch A" },
+      { name: "4th", target: 2600, achieved: 1800, branch: "Branch A" },
+      { name: "5th", target: 2800, achieved: 2000, branch: "Branch A" },
+      { name: "6th", target: 3000, achieved: 2200, branch: "Branch A" },
+
+      { name: "1st", target: 1500, achieved: 1000, branch: "Branch B" },
+      { name: "2nd", target: 1700, achieved: 1200, branch: "Branch B" },
+      { name: "3rd", target: 1900, achieved: 1400, branch: "Branch B" },
+      { name: "4th", target: 2100, achieved: 1600, branch: "Branch B" },
+      { name: "5th", target: 2300, achieved: 1800, branch: "Branch B" },
+      { name: "6th", target: 2500, achieved: 2000, branch: "Branch B" },
+
+      { name: "1st", target: 1200, achieved: 800, branch: "Branch C" },
+      { name: "2nd", target: 1400, achieved: 900, branch: "Branch C" },
+      { name: "3rd", target: 1600, achieved: 1000, branch: "Branch C" },
+      { name: "4th", target: 1800, achieved: 1100, branch: "Branch C" },
+      { name: "5th", target: 2000, achieved: 1200, branch: "Branch C" },
+      { name: "6th", target: 2200, achieved: 1300, branch: "Branch C" },
+    ],
+    leadStatus: [
+      { name: "Open", value: 300, color: "#3b82f6" },
+      { name: "Closed", value: 100, color: "#ef4444" },
+      { name: "Product/Service Sold", value: 50, color: "#eab308" },
+      { name: "To Callback Later", value: 21, color: "#22c55e" },
+    ],
+    agentPerformance: [
+      { name: "Jane Doe", value: 12000, branch: "Branch A" },
+      { name: "John Smith", value: 9000, branch: "Branch B" },
+      { name: "Alice Johnson", value: 15000, branch: "Branch A" },
+      { name: "Bob Wilson", value: 7000, branch: "Branch C" },
+      { name: "Carol White", value: 11000, branch: "Branch B" },
+      { name: "Dave Brown", value: 8000, branch: "Branch C" },
+      { name: "Eva Green", value: 9500, branch: "Branch A" },
+      { name: "Frank Black", value: 13000, branch: "Branch B" },
+    ],
+  },
+  tables: {
+    branchAgentRanking: [
+      { id: 1, name: "Jane Doe", target: 4000, realised: 3500, branch: "Branch A", trendTarget: "up", trendRealised: "down" },
+      { id: 2, name: "John Smith", target: 4000, realised: 3200, branch: "Branch B", trendTarget: "up", trendRealised: "down" },
+      { id: 3, name: "Alice Johnson", target: 4000, realised: 3800, branch: "Branch A", trendTarget: "up", trendRealised: "down" },
+      { id: 4, name: "Bob Wilson", target: 4000, realised: 3100, branch: "Branch C", trendTarget: "up", trendRealised: "down" },
+      { id: 5, name: "Carol White", target: 4000, realised: 3900, branch: "Branch B", trendTarget: "up", trendRealised: "down" },
+      { id: 6, name: "Dave Brown", target: 4000, realised: 3000, branch: "Branch C", trendTarget: "up", trendRealised: "down" },
+    ],
+    topPerformingAgents: [
+      { id: 1, name: "Jane Doe", tat: "3.48 (days)", conversion: "1%", branch: "Branch A" },
+      { id: 2, name: "John Smith", tat: "3.12 (days)", conversion: "2%", branch: "Branch B" },
+      { id: 3, name: "Alice Johnson", tat: "2.90 (days)", conversion: "1.5%", branch: "Branch A" },
+      { id: 4, name: "Bob Wilson", tat: "3.60 (days)", conversion: "1.2%", branch: "Branch C" },
+      { id: 5, name: "Carol White", tat: "3.20 (days)", conversion: "1.8%", branch: "Branch B" },
+      { id: 6, name: "Eva Green", tat: "3.10 (days)", conversion: "1.9%", branch: "Branch A" },
+      { id: 7, name: "Frank Black", tat: "2.80 (days)", conversion: "2.1%", branch: "Branch B" },
+    ],
+  },
+  filters: {
+    agents: ["Jane Doe", "John Smith", "Alice Johnson", "Bob Wilson", "Carol White", "Dave Brown", "Eva Green", "Frank Black"],
+    branches: ["Branch A", "Branch B", "Branch C"],
+    products: ["Product X", "Product Y", "Product Z"],
+    segments: ["Segment 1", "Segment 2", "Segment 3"],
+    campaigns: ["Campaign Q1", "Campaign Q2", "Campaign Q3"],
+  },
+} as const;
+
+
