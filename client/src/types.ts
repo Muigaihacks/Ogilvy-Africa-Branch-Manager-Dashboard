@@ -21,6 +21,7 @@ export interface LeadStatus {
   name: string;
   value: number;
   color: string;
+  [key: string]: string | number;
 }
 
 export interface AgentRanking {
