@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import {
   AreaChart,
@@ -16,10 +18,11 @@ import {
 } from 'recharts';
 import { ChartData, LeadStatus, Filters } from '@/types';
 import { Download, ChevronDown, FileSpreadsheet, FileImage } from 'lucide-react';
+import { openPrintableReport } from '@/lib/printReport';
 
 /* --- Reusable Components for Headers --- */
 
-const DownloadMenu = () => {
+const DownloadMenu = ({ onDownloadPdf }: { onDownloadPdf?: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -27,12 +30,22 @@ const DownloadMenu = () => {
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className="p-1.5 hover:bg-gray-100 rounded-full text-gray-400 transition-colors"
+        aria-label="Download"
       >
         <Download size={18} />
       </button>
       
       {isOpen && (
         <div className="absolute right-0 top-8 bg-white border border-gray-100 shadow-lg rounded-lg w-40 py-1 z-50">
+          <button
+            className="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 flex items-center gap-2"
+            onClick={() => {
+              setIsOpen(false);
+              onDownloadPdf?.();
+            }}
+          >
+            <Download size={14} /> Download PDF
+          </button>
           <button className="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 flex items-center gap-2">
             <FileImage size={14} /> Download JPEG
           </button>
@@ -95,7 +108,35 @@ export const LeadsByBranchChart = ({ data, filters }: { data: ChartData[], filte
             options={['Month', 'Quarter', 'Year']} 
             onChange={(val) => setTimeFilter(val)}
           />
-          <DownloadMenu />
+          <DownloadMenu
+            onDownloadPdf={() => {
+              const totalLeads = displayData.reduce((sum, r: any) => sum + (Number(r.leads) || 0), 0);
+              const avgConversion =
+                displayData.length > 0
+                  ? displayData.reduce((sum, r: any) => sum + (Number(r.conversion) || 0), 0) / displayData.length
+                  : 0;
+
+              openPrintableReport({
+                title: 'Leads By Branch — Report',
+                subtitle: `Branch: ${currentBranch !== 'Branch' ? currentBranch : 'All'} • View: ${timeFilter}`,
+                metrics: [
+                  { label: 'Points shown', value: String(displayData.length) },
+                  { label: 'Total leads', value: String(totalLeads) },
+                  { label: 'Avg conversion', value: `${avgConversion.toFixed(2)}` },
+                ],
+                columns: [
+                  { key: 'name', label: 'Period', align: 'left' },
+                  { key: 'leads', label: 'Leads', align: 'right' },
+                  { key: 'conversion', label: 'Conversion', align: 'right' },
+                ],
+                rows: displayData.map((r: any) => ({
+                  name: r.name,
+                  leads: r.leads,
+                  conversion: r.conversion,
+                })),
+              });
+            }}
+          />
         </div>
       </div>
       
@@ -132,7 +173,21 @@ export const LeadStatusChart = ({ data }: { data: LeadStatus[] }) => {
     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 h-full flex flex-col">
        <div className="flex justify-between items-center mb-2">
         <h3 className="text-gray-700 font-semibold text-sm sm:text-base">Lead Status</h3>
-        <DownloadMenu />
+        <DownloadMenu
+          onDownloadPdf={() => {
+            const total = data.reduce((sum, item) => sum + item.value, 0);
+            openPrintableReport({
+              title: 'Lead Status — Report',
+              subtitle: 'Distribution overview',
+              metrics: [{ label: 'Total leads', value: String(total) }],
+              columns: [
+                { key: 'name', label: 'Status', align: 'left' },
+                { key: 'value', label: 'Count', align: 'right' },
+              ],
+              rows: data.map((r) => ({ name: r.name, value: r.value })),
+            });
+          }}
+        />
       </div>
       
       <div className="text-right text-xs font-bold text-gray-700 mb-2">TOTAL LEADS {total}</div>
@@ -180,7 +235,34 @@ export const RevenueByBranchChart = ({ data, filters }: { data: ChartData[], fil
         <h3 className="text-gray-700 font-semibold text-sm sm:text-base">Revenue By Branch</h3>
         <div className="flex items-center gap-3">
           <ChartDropdown label={currentBranch !== 'Branch' ? currentBranch : 'Branch'} options={filters?.branches || []} />
-          <DownloadMenu />
+          <DownloadMenu
+            onDownloadPdf={() => {
+              const totalTarget = data.reduce((sum, r: any) => sum + (Number(r.target) || 0), 0);
+              const totalAchieved = data.reduce((sum, r: any) => sum + (Number(r.achieved) || 0), 0);
+              const achievementRate = totalTarget > 0 ? (totalAchieved / totalTarget) * 100 : 0;
+
+              openPrintableReport({
+                title: 'Revenue By Branch — Report',
+                subtitle: `Branch: ${currentBranch !== 'Branch' ? currentBranch : 'All'}`,
+                metrics: [
+                  { label: 'Points shown', value: String(data.length) },
+                  { label: 'Total target', value: String(totalTarget) },
+                  { label: 'Total achieved', value: String(totalAchieved) },
+                  { label: 'Achievement rate', value: `${achievementRate.toFixed(1)}%` },
+                ],
+                columns: [
+                  { key: 'name', label: 'Period', align: 'left' },
+                  { key: 'target', label: 'Target', align: 'right' },
+                  { key: 'achieved', label: 'Achieved', align: 'right' },
+                ],
+                rows: data.map((r: any) => ({
+                  name: r.name,
+                  target: r.target,
+                  achieved: r.achieved,
+                })),
+              });
+            }}
+          />
         </div>
       </div>
       
@@ -215,7 +297,24 @@ export const AgentPerformanceChart = ({ data }: { data: ChartData[] }) => {
     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 h-full">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-gray-700 font-semibold text-sm sm:text-base">Agent Performance</h3>
-         <DownloadMenu />
+         <DownloadMenu
+           onDownloadPdf={() => {
+             const total = data.reduce((sum, r: any) => sum + (Number(r.value) || 0), 0);
+             openPrintableReport({
+               title: 'Agent Performance — Report',
+               subtitle: 'Bar chart values',
+               metrics: [
+                 { label: 'Agents shown', value: String(data.length) },
+                 { label: 'Total value', value: String(total) },
+               ],
+               columns: [
+                 { key: 'name', label: 'Agent', align: 'left' },
+                 { key: 'value', label: 'Value', align: 'right' },
+               ],
+               rows: data.map((r: any) => ({ name: r.name, value: r.value })),
+             });
+           }}
+         />
       </div>
       
       <div className="h-[280px] w-full">

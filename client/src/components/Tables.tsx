@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useMemo, useState } from 'react';
 import { MoreVertical, ArrowUpRight, TrendingDown } from 'lucide-react';
 import { AgentRanking, TopAgent } from '@/types';
 
@@ -8,6 +10,28 @@ import { AgentRanking, TopAgent } from '@/types';
 // Based on user request: "increase or decrease next to the target and realised amounts"
 
 export const AgentRankingTable = ({ data }: { data: AgentRanking[] }) => {
+  const [highlighted, setHighlighted] = useState<Set<number>>(() => new Set());
+  const [openMenuRowId, setOpenMenuRowId] = useState<number | null>(null);
+
+  const toggleHighlighted = (id: number) => {
+    setHighlighted(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const copyAgent = async (agent: AgentRanking) => {
+    const text = `Agent: ${agent.name}\nTarget: KES ${agent.target.toLocaleString()}\nRealised: KES ${agent.realised.toLocaleString()}`;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // Fallback that still lets the user copy manually.
+      window.prompt('Copy agent summary:', text);
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 h-full min-w-[600px] overflow-x-auto">
       <div className="flex justify-between items-center mb-2 border-b border-gray-100 pb-4">
@@ -21,7 +45,13 @@ export const AgentRankingTable = ({ data }: { data: AgentRanking[] }) => {
         <table className="w-full text-sm text-left">
           <tbody className="space-y-4">
             {data.map((agent) => (
-              <tr key={agent.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors group">
+              <tr
+                key={agent.id}
+                className={[
+                  "border-b border-gray-50 last:border-0 transition-colors group",
+                  highlighted.has(agent.id) ? "bg-amber-50" : "hover:bg-gray-50",
+                ].join(" ")}
+              >
                 <td className="py-4 font-medium text-gray-700 pl-2">{agent.name}</td>
                 
                 <td className="py-4 text-gray-500">
@@ -52,7 +82,44 @@ export const AgentRankingTable = ({ data }: { data: AgentRanking[] }) => {
                 </td>
                 
                 <td className="py-4 text-right pr-2">
-                   <button className="text-gray-400 hover:text-gray-600"><MoreVertical size={18} /></button>
+                  <div className="relative inline-block">
+                    <button
+                      className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100"
+                      aria-label="Row actions"
+                      aria-haspopup="menu"
+                      aria-expanded={openMenuRowId === agent.id}
+                      onClick={() => setOpenMenuRowId(openMenuRowId === agent.id ? null : agent.id)}
+                    >
+                      <MoreVertical size={18} />
+                    </button>
+                    {openMenuRowId === agent.id && (
+                      <div
+                        role="menu"
+                        className="absolute right-0 top-8 w-44 bg-white border border-gray-100 shadow-lg rounded-lg py-1 z-50"
+                      >
+                        <button
+                          role="menuitem"
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          onClick={() => {
+                            toggleHighlighted(agent.id);
+                            setOpenMenuRowId(null);
+                          }}
+                        >
+                          {highlighted.has(agent.id) ? "Remove highlight" : "Highlight row"}
+                        </button>
+                        <button
+                          role="menuitem"
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          onClick={() => {
+                            void copyAgent(agent);
+                            setOpenMenuRowId(null);
+                          }}
+                        >
+                          Copy summary
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
@@ -64,6 +131,27 @@ export const AgentRankingTable = ({ data }: { data: AgentRanking[] }) => {
 };
 
 export const TopAgentsTable = ({ data }: { data: TopAgent[] }) => {
+  const [highlighted, setHighlighted] = useState<Set<number>>(() => new Set());
+  const [openMenuRowId, setOpenMenuRowId] = useState<number | null>(null);
+
+  const toggleHighlighted = (id: number) => {
+    setHighlighted(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const copyAgent = async (agent: TopAgent) => {
+    const text = `Agent: ${agent.name}\nTAT: ${agent.tat}\nConversion: ${agent.conversion}\nBranch: ${agent.branch}`;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      window.prompt('Copy agent summary:', text);
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 h-full min-w-[600px]">
       <div className="flex justify-between items-center mb-6">
@@ -73,13 +161,56 @@ export const TopAgentsTable = ({ data }: { data: TopAgent[] }) => {
         <table className="w-full text-sm text-left">
           <tbody>
             {data.map((agent) => (
-              <tr key={agent.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
+              <tr
+                key={agent.id}
+                className={[
+                  "border-b border-gray-50 last:border-0 transition-colors",
+                  highlighted.has(agent.id) ? "bg-amber-50" : "hover:bg-gray-50",
+                ].join(" ")}
+              >
                 <td className="py-4 font-medium text-gray-700 pl-2 w-1/4">{agent.name}</td>
                 <td className="py-4 text-gray-500 w-1/4">{agent.tat} TAT</td>
                 <td className="py-4 text-gray-500 w-1/4">{agent.conversion} Conversion Rate</td>
                 <td className="py-4 text-gray-500 w-1/6 text-right">{agent.branch}</td>
                 <td className="py-4 text-right pr-2 w-1/12">
-                   <button className="text-gray-400 hover:text-gray-600"><MoreVertical size={18} /></button>
+                  <div className="relative inline-block">
+                    <button
+                      className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100"
+                      aria-label="Row actions"
+                      aria-haspopup="menu"
+                      aria-expanded={openMenuRowId === agent.id}
+                      onClick={() => setOpenMenuRowId(openMenuRowId === agent.id ? null : agent.id)}
+                    >
+                      <MoreVertical size={18} />
+                    </button>
+                    {openMenuRowId === agent.id && (
+                      <div
+                        role="menu"
+                        className="absolute right-0 top-8 w-44 bg-white border border-gray-100 shadow-lg rounded-lg py-1 z-50"
+                      >
+                        <button
+                          role="menuitem"
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          onClick={() => {
+                            toggleHighlighted(agent.id);
+                            setOpenMenuRowId(null);
+                          }}
+                        >
+                          {highlighted.has(agent.id) ? "Remove highlight" : "Highlight row"}
+                        </button>
+                        <button
+                          role="menuitem"
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          onClick={() => {
+                            void copyAgent(agent);
+                            setOpenMenuRowId(null);
+                          }}
+                        >
+                          Copy summary
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
